@@ -33,7 +33,7 @@ function setup() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  gridDist = Math.min(width / (gridWidth + 1), height / (gridHeight + 1));
+  gridDist = Math.min(width / (gridWidth + 2), height / (gridHeight + 2));
 }
 
 // get distance between two points
@@ -99,7 +99,6 @@ const intersects = l1 => lines.some(l2 => {
     inty = slope1 * intx + yint1;
   }
 
-  console.log(intx, inty);
   return (
     Math.min(l1.y1, l1.y2) <= inty && inty <= Math.max(l1.y1, l1.y2) &&
     Math.min(l1.x1, l1.x2) <= intx && intx <= Math.max(l1.x1, l1.x2) &&
@@ -142,13 +141,9 @@ function mousePressed() {
             y2: dot.y,
             red: redMove
           };
-          console.log(1);
           if (through(l)) return; // check if line goes through lattice points
-          console.log(2);
           if (intersects(l)) return; // check if line intersects other lines
-          console.log(3);
           if (lines.some(l2 => lineEq(l, l2))) return; // check if line is already in lines
-          console.log(4);
           lines.push(l);
           const newPolygons = detect(l);
           if (newPolygons.length === 0) redMove = !redMove;
@@ -163,8 +158,39 @@ function mousePressed() {
     }
   }
 }
+
 // check if two lines are colinear
 const inline = (l1, l2) => (l2.x2 - l2.x1) * (l1.y2 - l1.y1) === (l1.x2 - l1.x1) * (l2.y2 - l2.y1);
+
+// check if lattice points contained
+const lattice = (edges) => {
+  for (const row of dots) {
+    for (const dot of row) {
+      if (edges.some(e => e.x1 === dot.x && e.y1 === dot.y)) continue;
+      let B = true;
+      for (const edge of edges) {
+        let i = 0;
+        while (
+          (edges[i].x1 == edge.x1 && edges[i].y1 == edge.y1) ||
+          (edges[i].x1 == edge.x2 && edges[i].y1 == edge.y2)
+        ) i++;
+        const vertex = { x: edges[i].x1, y: edges[i].y1 };
+        if (edge.x2 == edge.x1) {
+          const b1 = (vertex.x > edge.x1);
+          const b2 = (dot.x > edge.x1);
+          if (b1 != b2) { B = false; break; }
+          continue;
+        }
+        const slope = (edge.y2 - edge.y1) / (edge.x2 - edge.x1);
+        const b1 = (vertex.y > slope * (vertex.x - edge.x1) + edge.y1);
+        const b2 = (dot.y > slope * (dot.x - edge.x1) + edge.y1);
+        if (b1 != b2) { B = false; break; }
+      }
+      if (B) return true;
+    }
+  }
+  return false;
+}
 
 // detect all polygons
 const detect = l => detectRec([{ x1: l.x1, y1: l.y1, x2: l.x2, y2: l.y2 }]);
@@ -174,10 +200,7 @@ function detectRec(edges) {
   const start = edges[0];
   const end = edges.at(-1);
   if (end.x2 === start.x1 && end.y2 === start.y1) {
-    if (
-      max(edges.map(e => e.x1)) - min(edges.map(e => e.x1)) >= 3 &&
-      max(edges.map(e => e.y1)) - min(edges.map(e => e.y1)) >= 3
-    ) return []; // no lattice points contained
+    if (lattice(edges)) return []; // no lattice points contained
     return [{ edges, red: redMove, opacity: 0 }];
   }
 
