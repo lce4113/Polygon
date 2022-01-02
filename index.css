@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -5,4 +7,25 @@
 
 main {
   height: 100vh;
+}
+
+#scoreboard {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  font-family: "Roboto", sans-serif;
+  user-select: none;
+  /* font-size: 10rem; */
+  /* top: 0; */
+  /* left: 0; */
+}
+
+#red-score {
+  color: rgb(255, 175, 175);
+}
+
+#blue-score {
+  color: rgb(175, 175, 255);
 }

@@ -1,5 +1,5 @@
-const gridWidth = 4
-const gridHeight = 3
+const gridWidth = 2
+const gridHeight = 2
 let gridDist, radius;
 
 const dots = []
@@ -7,22 +7,37 @@ const lines = []
 const currLine = { show: false }
 let redMove = true
 const polygons = []
+let areaLeft = (gridWidth - 1) * (gridHeight - 1);
+let red = 0, blue = 0;
 
-let posToX, posToY;
+let xOffset, yOffset, posToX, posToY, positionScore;
+posToX = i => xOffset + gridDist * i;
+posToY = k => yOffset + gridDist * k;
+
+let scoreboard, redScoreboard, blueScoreboard;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
 
-  gridDist = Math.min(width / (gridWidth + 2), height / (gridHeight + 2));
-  posToX = i => {
-    const xOffset = (width - gridDist * (gridWidth - 1)) / 2;
-    return xOffset + gridDist * i;
-  };
-  posToY = k => {
-    const yOffset = (height - gridDist * (gridHeight - 1)) / 2;
-    return yOffset + gridDist * k;
-  };
+  scoreboard = document.getElementById('scoreboard');
+  redScoreboard = document.getElementById('red-score');
+  blueScoreboard = document.getElementById('blue-score');
 
+  // position things
+  rePos = () => {
+    // set offsets
+    gridDist = Math.min(width / (gridWidth + 2), height / (gridHeight + 2));
+    xOffset = (width - gridDist * (gridWidth - 1)) / 2;
+    yOffset = (height - gridDist * (gridHeight - 1)) / 2;
+
+    // position scoreboard
+    scoreboard.style.fontSize = `${gridDist * 0.4}px`;
+    scoreboard.style.left = (width - document.getElementById('scoreboard').offsetWidth) / 2 + 'px';
+    scoreboard.style.top = (yOffset - document.getElementById('scoreboard').offsetHeight) / 2 + 'px';
+  }
+  rePos();
+
+  // create all dots
   for (let i = 0; i < gridWidth; i++) {
     dots[i] = []
     for (let k = 0; k < gridHeight; k++) {
@@ -33,7 +48,7 @@ function setup() {
 
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
-  gridDist = Math.min(width / (gridWidth + 2), height / (gridHeight + 2));
+  rePos();
 }
 
 // get distance between two points
@@ -80,8 +95,19 @@ function draw() {
       circle(posToX(dot.x), posToY(dot.y), radius);
     }
   }
+
+  // draw end of game message
+  if (eq(areaLeft, 0)) {
+  }
 }
 
+// find area of triangle
+const area = triangle => {
+  const x1 = triangle.edges[0].x1, y1 = triangle.edges[0].y1;
+  const x2 = triangle.edges[1].x1, y2 = triangle.edges[1].y1;
+  const x3 = triangle.edges[2].x1, y3 = triangle.edges[2].y1;
+  return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
+}
 // round to n decimal places
 const eq = (a, b) => Math.abs(a - b) < 0.00001;
 // check if line intersects any other line
@@ -148,13 +174,17 @@ function mousePressed() {
           const newPolygons = detect(l);
           if (newPolygons.length === 0) redMove = !redMove;
           polygons.push(...newPolygons);
+          for (const p of newPolygons) {
+            areaLeft -= area(p);
+            red += p.red, blue += !p.red;
+            redScoreboard.innerText = red, blueScoreboard.innerText = blue;
+          }
         } else {
           dot.selected = true;
           Object.assign(currLine, { show: true, x1: dot.x, y1: dot.y });
         }
         return;
       }
-
     }
   }
 }
