@@ -5,8 +5,10 @@
   padding: 0;
 }
 
-main {
-  height: 100vh;
+body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 #scoreboard {
@@ -17,6 +19,9 @@ main {
   color: #fff;
   font-family: "Roboto", sans-serif;
   user-select: none;
+  /* padding: 1% 2%; */
+  /* border-radius: 3vw; */
+  /* background: rgba(51, 51, 51, 1); */
   /* font-size: 10rem; */
   /* top: 0; */
   /* left: 0; */
@@ -28,4 +33,54 @@ main {
 
 #blue-score {
   color: rgb(175, 175, 255);
+}
+
+#cover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(51, 51, 51, 0);
+  opacity: 0;
+  backdrop-filter: blur(0px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* background: rgba(51, 51, 51, 0.5); */
+  /* backdrop-filter: blur(5px); */
+}
+
+.winner {
+  font-family: "Roboto", sans-serif;
+  font-size: min(15vw, 15vh);
+  color: #fff;
+  text-shadow: min(0.75vw, 0.75vh) min(0.75vw, 0.75vh) 0 rgb(51, 51, 51);
+  display: none;
+}
+
+.red {
+  color: rgb(255, 175, 175);
+}
+.blue {
+  color: rgb(175, 175, 255);
+}
+.tie-color {
+  color: rgb(215, 175, 215);
+}
+
+#play-again {
+  margin-top: min(3vw, 3vh);
+  font-family: "Roboto", sans-serif;
+  font-size: min(3vw, 3vh);
+  border: none;
+  background: rgb(175, 255, 175);
+  padding: min(1.5vw, 1.5vh);
+  cursor: pointer;
+  transition: background 0.1s ease-in-out;
+}
+
+#play-again:hover {
+  background: rgb(125, 182, 125);
 }

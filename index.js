@@ -15,6 +15,8 @@ posToX = i => xOffset + gridDist * i;
 posToY = k => yOffset + gridDist * k;
 
 let scoreboard, redScoreboard, blueScoreboard;
+let cover, redWins, blueWins, tie;
+let coverOpacity = 0;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -22,6 +24,10 @@ function setup() {
   scoreboard = document.getElementById('scoreboard');
   redScoreboard = document.getElementById('red-score');
   blueScoreboard = document.getElementById('blue-score');
+  cover = document.getElementById('cover');
+  redWins = document.getElementById('red-wins');
+  blueWins = document.getElementById('blue-wins');
+  tie = document.getElementById('tie');
 
   // position things
   rePos = () => {
@@ -98,6 +104,10 @@ function draw() {
 
   // draw end of game message
   if (eq(areaLeft, 0)) {
+    if (coverOpacity < 1) coverOpacity += 0.02;
+    cover.style.background = `rgba(51, 51, 51, ${coverOpacity * 0.5})`;
+    cover.style.opacity = coverOpacity;
+    cover.style.backdropFilter = `blur(${coverOpacity * 5}px)`;
   }
 }
 
@@ -151,6 +161,7 @@ const lineEq = (l1, l2) => (
   (l1.x1 === l2.x2 && l1.y1 === l2.y2 && l1.x2 === l2.x1 && l1.y2 === l2.y1)
 );
 function mousePressed() {
+  if (eq(areaLeft, 0)) return;
   if (mouseX > width || mouseY > height) return;
   for (let x = 0; x < dots.length; x++) {
     for (let y = 0; y < dots[x].length; y++) {
@@ -178,6 +189,11 @@ function mousePressed() {
             areaLeft -= area(p);
             red += p.red, blue += !p.red;
             redScoreboard.innerText = red, blueScoreboard.innerText = blue;
+          }
+          if (eq(areaLeft, 0)) {
+            if (red > blue) redWins.style.display = "block";
+            if (red < blue) blueWins.style.display = "block";
+            if (red == blue) tie.style.display = "block";
           }
         } else {
           dot.selected = true;
