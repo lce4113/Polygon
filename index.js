@@ -15,7 +15,7 @@ posToX = i => xOffset + gridDist * i;
 posToY = k => yOffset + gridDist * k;
 
 let scoreboard, redScoreboard, blueScoreboard;
-let cover, redWins, blueWins, tie;
+let cover, redWins, blueWins, tie, playAgain;
 let coverOpacity = 0;
 
 function setup() {
@@ -28,6 +28,8 @@ function setup() {
   redWins = document.getElementById('red-wins');
   blueWins = document.getElementById('blue-wins');
   tie = document.getElementById('tie');
+  playAgain = document.getElementById('play-again');
+  playAgain.onclick = playAgainClicked;
 
   // position things
   rePos = () => {
@@ -50,6 +52,31 @@ function setup() {
       dots[i][k] = { x: i, y: k };
     }
   }
+}
+
+// play again
+function playAgainClicked() {
+  coverOpacity = 0;
+  cover.style.background = 'rgba(51, 51, 51, 0)';
+  cover.style.opacity = 0;
+  cover.style.backdropFilter = 'blur(0px)';
+  areaLeft = (gridWidth - 1) * (gridHeight - 1);
+  red = 0, blue = 0;
+  redScoreboard.innerHTML = red;
+  blueScoreboard.innerHTML = blue;
+  redMove = true;
+  for (let i = 0; i < gridWidth; i++) {
+    dots[i] = []
+    for (let k = 0; k < gridHeight; k++) {
+      dots[i][k] = { x: i, y: k };
+    }
+  }
+  lines.length = 0;
+  polygons.length = 0;
+  currLine.show = false;
+  redWins.style.display = "none";
+  blueWins.style.display = "none";
+  tie.style.display = "none";
 }
 
 function windowResized() {
