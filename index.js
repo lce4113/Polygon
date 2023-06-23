@@ -1,5 +1,5 @@
-const gridWidth = 2
-const gridHeight = 2
+const gridWidth = 5
+const gridHeight = 5
 let gridDist, radius;
 
 const dots = []
