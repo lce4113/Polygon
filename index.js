@@ -1,5 +1,5 @@
-const gridWidth = 5
-const gridHeight = 5
+const gridWidth = 5;
+const gridHeight = 5;
 let gridDist, radius;
 
 const dots = []
@@ -60,6 +60,7 @@ function playAgainClicked() {
   cover.style.background = 'rgba(51, 51, 51, 0)';
   cover.style.opacity = 0;
   cover.style.backdropFilter = 'blur(0px)';
+  cover.style.display = "none";
   areaLeft = (gridWidth - 1) * (gridHeight - 1);
   red = 0, blue = 0;
   redScoreboard.innerHTML = red;
@@ -131,20 +132,14 @@ function draw() {
 
   // draw end of game message
   if (eq(areaLeft, 0)) {
-    if (coverOpacity < 1) coverOpacity += 0.02;
+    if (coverOpacity < 1) coverOpacity += 0.04;
+    cover.style.display = "flex";
     cover.style.background = `rgba(51, 51, 51, ${coverOpacity * 0.5})`;
     cover.style.opacity = coverOpacity;
     cover.style.backdropFilter = `blur(${coverOpacity * 5}px)`;
   }
 }
 
-// find area of triangle
-const area = triangle => {
-  const x1 = triangle.edges[0].x1, y1 = triangle.edges[0].y1;
-  const x2 = triangle.edges[1].x1, y2 = triangle.edges[1].y1;
-  const x3 = triangle.edges[2].x1, y3 = triangle.edges[2].y1;
-  return Math.abs(x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2;
-}
 // round to n decimal places
 const eq = (a, b) => Math.abs(a - b) < 0.00001;
 // check if line intersects any other line
@@ -213,7 +208,7 @@ function mousePressed() {
           if (newPolygons.length === 0) redMove = !redMove;
           polygons.push(...newPolygons);
           for (const p of newPolygons) {
-            areaLeft -= area(p);
+            areaLeft -= 0.5;
             red += p.red, blue += !p.red;
             redScoreboard.innerText = red, blueScoreboard.innerText = blue;
           }

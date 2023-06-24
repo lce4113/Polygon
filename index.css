@@ -6,8 +6,6 @@
 }
 
 body {
-  width: 100%;
-  height: 100%;
   overflow: hidden;
 }
 
@@ -19,12 +17,6 @@ body {
   color: #fff;
   font-family: "Roboto", sans-serif;
   user-select: none;
-  /* padding: 1% 2%; */
-  /* border-radius: 3vw; */
-  /* background: rgba(51, 51, 51, 1); */
-  /* font-size: 10rem; */
-  /* top: 0; */
-  /* left: 0; */
 }
 
 #red-score {
@@ -41,15 +33,12 @@ body {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(51, 51, 51, 0);
-  opacity: 0;
-  backdrop-filter: blur(0px);
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* background: rgba(51, 51, 51, 0.5); */
-  /* backdrop-filter: blur(5px); */
+  background: rgba(51, 51, 51, 0.5);
+  backdrop-filter: blur(5px);
 }
 
 .winner {
@@ -57,7 +46,6 @@ body {
   font-size: min(15vw, 15vh);
   color: #fff;
   text-shadow: min(0.5vw, 0.5vh) min(0.5vw, 0.5vh) 0 rgb(51, 51, 51);
-  /* text-border: min(0.5vw, 0.5vh) solid rgb(51, 51, 51); */
   display: none;
 }
 
